@@ -14,6 +14,9 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"github.com/twinj/uuid"
+	"encoding/hex"
+	"crypto/md5"
 )
 
 //字符串高效拼接
@@ -161,4 +164,27 @@ func Slice2Strig(slices []string) string {
 		}
 	}
 	return plantids
+}
+
+func GenerateUUID() string {
+	u4 := uuid.NewV4()
+	if u4 != nil {
+		return Md5(u4.String())
+	} else {
+		u1 := uuid.NewV1()
+		u2 := uuid.NewV2(uuid.DomainGroup)
+		u3 := uuid.NewV3(u1, u2)
+		return Md5(u3.String())
+	}
+}
+
+
+func Md5(b string) (tp string) {
+	h := md5.New()
+	h.Write([]byte(b))
+	x := h.Sum(nil)
+	y := make([]byte, 32)
+	hex.Encode(y, x)
+
+	return string(y)
 }
