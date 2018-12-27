@@ -1,7 +1,7 @@
 package plog
 
 /**********************************************
-** @Des: stdLogger print log
+** @Des: stdLogger printlog
 ** @Author: zhangxueyuan 
 ** @Date:   2018-09-11 10:43:47
 ** @Last Modified by:   zhangxueyuan 

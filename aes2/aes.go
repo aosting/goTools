@@ -10,7 +10,7 @@ import (
 	"encoding/hex"
 	"github.com/aosting/goTools/plog"
 	"github.com/aosting/goTools/str"
-	"github.com/pkg/errors"
+	"errors"
 )
 
 /**********************************************
