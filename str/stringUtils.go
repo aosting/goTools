@@ -10,12 +10,13 @@ package str
 
 import (
 	"strings"
+	"bytes"
 )
 
 //字符串高效拼接
 func Append(substring ... string) string {
-	var buffer strings.Builder
-	//var buffer bytes.Buffer
+	//var buffer strings.Builder
+	var buffer bytes.Buffer
 	l := len(substring)
 	for i := 0; i < l; i++ {
 		buffer.WriteString(substring[i])
@@ -24,8 +25,8 @@ func Append(substring ... string) string {
 }
 
 func AppendCap(cap int, substring ... string) string {
-	var buffer strings.Builder
-	//var buffer bytes.Buffer
+	//var buffer strings.Builder
+	var buffer bytes.Buffer
 	l := len(substring)
 	buffer.Grow(cap)
 	for i := 0; i < l; i++ {
@@ -42,7 +43,9 @@ func ParseSlice(slices []string, separate string) string {
 
 //根据指定字符,分割参数,组合成串  并返回
 func SeparateParams(sep string, args ...string) string {
-	var buffer strings.Builder
+	//var buffer strings.Builder
+	var buffer bytes.Buffer
+
 	for index, arg := range args {
 		buffer.WriteString(arg)
 		if index != len(args)-1 {
