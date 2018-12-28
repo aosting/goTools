@@ -4,6 +4,7 @@ import (
 	"strings"
 	"strconv"
 	"errors"
+	"bytes"
 )
 
 /**********************************************
@@ -32,7 +33,8 @@ func Ip2Long(ip string) (uint64, error) {
 
 //ip的数字形式转化为点分十进制
 func Long2Ip(ipLong uint64) string {
-	var temp strings.Builder
+	//var temp strings.Builder
+	var temp bytes.Buffer
 	temp.WriteString(strconv.FormatUint(ipLong>>24, 10))
 	temp.WriteString(".")
 	temp.WriteString(strconv.FormatUint((ipLong&0x00FFFFFF)>>16, 10))
