@@ -9,14 +9,16 @@ import (
 )
 
 /**********************************************
-** @Des: client 生成环境必须设置超时时间
+** @Des: client 生产环境必须设置超时时间
 ** @Author: zhangxueyuan 
 ** @Date:   2018-12-27 15:50:51
 ** @Last Modified by:   zhangxueyuan 
 ** @Last Modified time: 2018-12-27 15:50:51
+						2019-04-10 16:58:51 增加时间统计
 ***********************************************/
 
 const _LABEL_ = "[_netServer_]"
+
 
 func VisitUrl(url string, duration time.Duration) ([]byte, int, error) {
 	client := http.Client{Timeout: duration}
