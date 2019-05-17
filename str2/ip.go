@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"errors"
 	"bytes"
+	"net/http"
 )
 
 /**********************************************
@@ -43,4 +44,25 @@ func Long2Ip(ipLong uint64) string {
 	temp.WriteString(".")
 	temp.WriteString(strconv.FormatUint(ipLong&0x000000FF, 10))
 	return temp.String()
+}
+
+//获取客户端ip地址
+func GetClientIp(r *http.Request) (ip string) {
+	ip = r.Header.Get("X-Real-IP")
+	if ip == "" {
+		ip = r.Header.Get("x-forwarded-for")
+	}
+	if ip == "" {
+		ip = r.Header.Get("Remote_addr")
+	}
+	if ip == "" {
+		ip = r.Header.Get("Proxy-Client-IP")
+	}
+	if ip == "" {
+		ip = r.Header.Get("WL-Proxy-Client-IP")
+	}
+	if ip == "" {
+		ip = strings.Split(r.RemoteAddr, ":")[0]
+	}
+	return ip
 }
