@@ -19,7 +19,6 @@ import (
 
 const _LABEL_ = "[_netServer_]"
 
-
 func VisitUrl(url string, duration time.Duration) ([]byte, int, error) {
 	client := http.Client{Timeout: duration}
 	response, error := client.Get(url)
