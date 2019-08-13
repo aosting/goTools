@@ -69,19 +69,25 @@ func handleResponse(resp *http.Response, err error) ([]byte, HTTP_STATUS, error)
 	return body, SERVER_OK, nil
 }
 
-func VisitUrl(url string, duration time.Duration) ([]byte, HTTP_STATUS, error) {
-	client := http.Client{Timeout: duration}
-	return handleResponse(client.Get(url))
+func VisitUrl(url string, c *http.Client, duration time.Duration) ([]byte, HTTP_STATUS, error) {
+	if c == nil {
+		c = &http.Client{Timeout: duration}
+	}
+	return handleResponse(c.Get(url))
 }
 
 //contentType: application/json  application/x-protobuf
-func VisitUrlPost(url string, duration time.Duration, contentType string, body string) ([]byte, HTTP_STATUS, error) {
-	client := http.Client{Timeout: duration}
-	return handleResponse(client.Post(url, contentType, strings.NewReader(body)))
+func VisitUrlPost(url string, c *http.Client, duration time.Duration, contentType string, body string) ([]byte, HTTP_STATUS, error) {
+	if c == nil {
+		c = &http.Client{Timeout: duration}
+	}
+	return handleResponse(c.Post(url, contentType, strings.NewReader(body)))
 }
 
-func VisitUrlWithHeaders(url string, duration time.Duration, headers map[string]string) ([]byte, HTTP_STATUS, error) {
-	client := http.Client{Timeout: duration}
+func VisitUrlWithHeaders(url string, c *http.Client, duration time.Duration, headers map[string]string) ([]byte, HTTP_STATUS, error) {
+	if c == nil {
+		c = &http.Client{Timeout: duration}
+	}
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitUrlWithHeaders(url string) NewRequest:", err)
@@ -90,11 +96,13 @@ func VisitUrlWithHeaders(url string, duration time.Duration, headers map[string]
 	for k, v := range headers {
 		request.Header.Add(k, v)
 	}
-	return handleResponse(client.Do(request))
+	return handleResponse(c.Do(request))
 }
 
-func VisitUrlPostWithHeaders(url string, duration time.Duration, body string, headers map[string]string) ([]byte, HTTP_STATUS, error) {
-	client := http.Client{Timeout: duration}
+func VisitUrlPostWithHeaders(url string, c *http.Client, duration time.Duration, body string, headers map[string]string) ([]byte, HTTP_STATUS, error) {
+	if c == nil {
+		c = &http.Client{Timeout: duration}
+	}
 	request, err := http.NewRequest("POST", url, strings.NewReader(body))
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitUrlPostWithHeaders(url string) NewRequest:", err)
@@ -103,5 +111,5 @@ func VisitUrlPostWithHeaders(url string, duration time.Duration, body string, he
 	for k, v := range headers {
 		request.Header.Add(k, v)
 	}
-	return handleResponse(client.Do(request))
+	return handleResponse(c.Do(request))
 }

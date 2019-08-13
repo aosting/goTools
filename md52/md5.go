@@ -20,6 +20,5 @@ func Md5(b string) (tp string) {
 	x := h.Sum(nil)
 	y := make([]byte, 32)
 	hex.Encode(y, x)
-
 	return string(y)
 }
