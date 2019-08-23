@@ -11,7 +11,7 @@ package plog
 import "log"
 
 var (
-	StdLogger *Logger = newLogger(log.Lshortfile, 3)
+	StdLogger *Logger = newLogger(log.Ldate|log.Ltime|log.Lshortfile, 3)
 )
 
 func ERRORF(format string, v ...interface{}) {

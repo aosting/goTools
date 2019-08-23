@@ -44,7 +44,7 @@ func newLogger3(w io.Writer, flag int, depth int) *Logger {
 		logger.depth = 2
 	}
 
-	logger.err = log.New(w, "[ERROR] ", flag)
+	logger.err = log.New(os.Stderr, "[ERROR] ", flag)
 	logger.warn = log.New(w, "[WARN] ", flag)
 	logger.info = log.New(w, "[INFO] ", flag)
 	logger.debug = log.New(w, "[DEBUG] ", flag)
