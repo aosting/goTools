@@ -84,6 +84,13 @@ func VisitUrlPost(url string, c *http.Client, duration time.Duration, contentTyp
 	return handleResponse(c.Post(url, contentType, strings.NewReader(body)))
 }
 
+func VisitUrlPostForm(url string, c *http.Client, duration time.Duration, data url.Values) ([]byte, HTTP_STATUS, error) {
+	if c == nil {
+		c = &http.Client{Timeout: duration}
+	}
+	return handleResponse(c.PostForm(url, data))
+}
+
 func VisitUrlWithHeaders(url string, c *http.Client, duration time.Duration, headers map[string]string) ([]byte, HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
