@@ -1,4 +1,4 @@
-package md52
+package crypto2
 
 import (
 	"crypto/sha1"
