@@ -16,7 +16,7 @@ import (
 func GenerateUUID() string {
 	u4 := uuid.NewV4()
 	if u4 != nil {
-		return md52.Md5(u4.String())
+		return md52.Md52(u4.String())
 	} else {
 		u1 := uuid.NewV1()
 		u2 := uuid.NewV2(uuid.DomainGroup)
