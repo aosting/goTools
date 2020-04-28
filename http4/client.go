@@ -59,12 +59,13 @@ func handleResponse(resp *http.Response, err error) ([]byte, HTTP_STATUS, error)
 	if resp.StatusCode/100 == 5 {
 		return nil, SERVER_5XX, err
 	}
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitURL(url string) ioutil.ReadAll:", err)
 		return nil, SERVER_RESPONSE_READ_ERROR, err
 	}
-	defer resp.Body.Close()
+
 
 	return body, SERVER_OK, nil
 }
