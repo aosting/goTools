@@ -54,9 +54,9 @@ func Int642String(in int64) string {
 }
 
 func Float322String(in float32) string {
-	return strconv.FormatFloat(float64(in), 'E', -1, 32)
+	return strconv.FormatFloat(float64(in), 'f', 5, 32)
 }
 
 func Float642String(in float64) string {
-	return strconv.FormatFloat(in, 'E', -1, 64)
+	return strconv.FormatFloat(in, 'f', 5, 64)
 }
