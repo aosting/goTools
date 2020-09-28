@@ -15,8 +15,8 @@ import (
 
 //字符串高效拼接
 func Append(substring ... string) string {
-	//var buffer strings.Builder
-	var buffer bytes.Buffer
+	var buffer strings.Builder
+	//var buffer bytes.Buffer
 	l := len(substring)
 	for i := 0; i < l; i++ {
 		buffer.WriteString(substring[i])
