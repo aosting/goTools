@@ -1,6 +1,7 @@
 package http5
 
 import (
+	"github.com/aosting/goTools/http4"
 	"github.com/aosting/goTools/plog"
 	"io/ioutil"
 	"net/http"
@@ -17,21 +18,6 @@ import (
 ** @Last Modified time: 2019-08-07 18:52:13
 ***********************************************/
 
-type HTTP_STATUS int64
-
-const (
-	SERVER_OK                  HTTP_STATUS = 0
-	SERVER_TIME_OUT            HTTP_STATUS = 1
-	SERVER_OTHER_ERROR         HTTP_STATUS = 2
-	SERVER_4XX                 HTTP_STATUS = 3
-	SERVER_5XX                 HTTP_STATUS = 4
-	SERVER_RESPONSE_READ_ERROR HTTP_STATUS = 5
-	REQUEST_ERROR              HTTP_STATUS = 10
-)
-const (
-	CONTENT_JSON     = "application/json"
-	CONTENT_PROTOBUF = "application/x-protobuf"
-)
 const _LABEL_ = "[_netServer_]"
 
 func IsTimeout(err error) bool {
@@ -45,7 +31,7 @@ func IsTimeout(err error) bool {
 	return false
 }
 
-func handleResponse(resp *http.Response, err error) ([]byte, int, HTTP_STATUS, error) {
+func handleResponse(resp *http.Response, err error) ([]byte, int, http4.HTTP_STATUS, error) {
 
 	statuscode := -2
 	if resp != nil {
@@ -54,27 +40,27 @@ func handleResponse(resp *http.Response, err error) ([]byte, int, HTTP_STATUS, e
 	if err != nil {
 		plog.INFO(_LABEL_, "handleResponse: ", err)
 		if IsTimeout(err) {
-			return nil, statuscode, SERVER_TIME_OUT, err
+			return nil, statuscode, http4.SERVER_TIME_OUT, err
 		}
-		return nil, statuscode, SERVER_OTHER_ERROR, err
+		return nil, statuscode, http4.SERVER_OTHER_ERROR, err
 	}
 	if resp.StatusCode/100 == 4 {
-		return nil, statuscode, SERVER_4XX, err
+		return nil, statuscode, http4.SERVER_4XX, err
 	}
 	if resp.StatusCode/100 == 5 {
-		return nil, statuscode, SERVER_5XX, err
+		return nil, statuscode, http4.SERVER_5XX, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitURL(url string) ioutil.ReadAll:", err)
-		return nil, statuscode, SERVER_RESPONSE_READ_ERROR, err
+		return nil, statuscode, http4.SERVER_RESPONSE_READ_ERROR, err
 	}
 
-	return body, statuscode, SERVER_OK, nil
+	return body, statuscode, http4.SERVER_OK, nil
 }
 
-func VisitUrl(url string, c *http.Client, duration time.Duration) ([]byte, int, HTTP_STATUS, error) {
+func VisitUrl(url string, c *http.Client, duration time.Duration) ([]byte, int, http4.HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
 	}
@@ -82,28 +68,28 @@ func VisitUrl(url string, c *http.Client, duration time.Duration) ([]byte, int, 
 }
 
 //contentType: application/json  application/x-protobuf
-func VisitUrlPost(url string, c *http.Client, duration time.Duration, contentType string, body string) ([]byte, int, HTTP_STATUS, error) {
+func VisitUrlPost(url string, c *http.Client, duration time.Duration, contentType string, body string) ([]byte, int, http4.HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
 	}
 	return handleResponse(c.Post(url, contentType, strings.NewReader(body)))
 }
 
-func VisitUrlPostForm(url string, c *http.Client, duration time.Duration, data url.Values) ([]byte, int, HTTP_STATUS, error) {
+func VisitUrlPostForm(url string, c *http.Client, duration time.Duration, data url.Values) ([]byte, int, http4.HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
 	}
 	return handleResponse(c.PostForm(url, data))
 }
 
-func VisitUrlWithHeaders(url string, c *http.Client, duration time.Duration, headers map[string]string) ([]byte, int, HTTP_STATUS, error) {
+func VisitUrlWithHeaders(url string, c *http.Client, duration time.Duration, headers map[string]string) ([]byte, int, http4.HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
 	}
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitUrlWithHeaders(url string) NewRequest:", err)
-		return nil, -1, REQUEST_ERROR, err
+		return nil, -1, http4.REQUEST_ERROR, err
 	}
 	for k, v := range headers {
 		request.Header.Add(k, v)
@@ -111,14 +97,14 @@ func VisitUrlWithHeaders(url string, c *http.Client, duration time.Duration, hea
 	return handleResponse(c.Do(request))
 }
 
-func VisitUrlPostWithHeaders(url string, c *http.Client, duration time.Duration, body string, headers map[string]string) ([]byte, int, HTTP_STATUS, error) {
+func VisitUrlPostWithHeaders(url string, c *http.Client, duration time.Duration, body string, headers map[string]string) ([]byte, int, http4.HTTP_STATUS, error) {
 	if c == nil {
 		c = &http.Client{Timeout: duration}
 	}
 	request, err := http.NewRequest("POST", url, strings.NewReader(body))
 	if err != nil {
 		plog.INFO(_LABEL_, "func VisitUrlPostWithHeaders(url string) NewRequest:", err)
-		return nil, -1, REQUEST_ERROR, err
+		return nil, -1, http4.REQUEST_ERROR, err
 	}
 	for k, v := range headers {
 		request.Header.Add(k, v)
