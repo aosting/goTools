@@ -47,7 +47,7 @@ func IsTimeout(err error) bool {
 
 func handleResponse(resp *http.Response, err error) ([]byte, int, HTTP_STATUS, error) {
 
-	statuscode := -1
+	statuscode := -2
 	if resp != nil {
 		statuscode = resp.StatusCode
 	}
