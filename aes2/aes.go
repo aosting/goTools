@@ -5,19 +5,19 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"fmt"
-	"strings"
 	"encoding/hex"
+	"errors"
+	"fmt"
 	"github.com/aosting/goTools/plog"
 	"github.com/aosting/goTools/str"
-	"errors"
+	"strings"
 )
 
 /**********************************************
 ** @Des: aes   AES/ECB/PKCS5
-** @Author: zhangxueyuan 
+** @Author: zhangxueyuan
 ** @Date:   2018-12-27 16:24:09
-** @Last Modified by:   zhangxueyuan 
+** @Last Modified by:   zhangxueyuan
 ** @Last Modified time: 2018-12-27 16:24:09
 ***********************************************/
 
@@ -70,6 +70,22 @@ func AesDecrypt(crypted, key []byte) ([]byte, error) {
 		plog.ERROR("PKCS5UnPadding err is:", err)
 		return nil, err
 	}
+	return origData, nil
+}
+
+func AesDecryptNoPadding(crypted, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		plog.ERROR("AesDecrypt err is:", err)
+		return nil, err
+	}
+	blockMode := NewECBDecrypter(block)
+	origData := make([]byte, len(crypted))
+	blockMode.CryptBlocks(origData, crypted)
+	if len(origData) == 0 {
+		return nil, errors.New("origData is empty")
+	}
+
 	return origData, nil
 }
 
